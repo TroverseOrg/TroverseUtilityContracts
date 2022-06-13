@@ -1,0 +1,94 @@
+// contracs/TroverseStarsMinter.sol
+// SPDX-License-Identifier: MIT
+
+// ████████╗██████╗  ██████╗ ██╗   ██╗███████╗██████╗ ███████╗███████╗    
+// ╚══██╔══╝██╔══██╗██╔═══██╗██║   ██║██╔════╝██╔══██╗██╔════╝██╔════╝    
+//    ██║   ██████╔╝██║   ██║██║   ██║█████╗  ██████╔╝███████╗█████╗      
+//    ██║   ██╔══██╗██║   ██║╚██╗ ██╔╝██╔══╝  ██╔══██╗╚════██║██╔══╝      
+//    ██║   ██║  ██║╚██████╔╝ ╚████╔╝ ███████╗██║  ██║███████║███████╗    
+//    ╚═╝   ╚═╝  ╚═╝ ╚═════╝   ╚═══╝  ╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝    
+
+pragma solidity ^0.8.0;
+
+import "@openzeppelin/contracts/access/Ownable.sol";
+
+
+interface IYieldToken {
+    function burn(address _from, uint256 _amount) external;
+}
+
+interface INFTContract {
+    function Mint(address to, uint256 quantity) external payable;
+    function totalSupply() external view returns (uint256);
+}
+
+
+contract TroverseStarsMinter is Ownable {
+
+    INFTContract public NFTContract;
+
+    uint256 public constant TOTAL_NFTS = 750;
+    uint256 public mintPrice;
+
+    mapping(address => uint256) public whitelist;
+    bool public isClaimActive;
+
+    IYieldToken public yieldToken;
+
+
+    constructor() { }
+    
+    modifier callerIsUser() {
+        require(tx.origin == msg.sender, "The caller is another contract");
+        _;
+    }
+
+    function setYieldToken(address yieldTokenAddress) external onlyOwner {
+        yieldToken = IYieldToken(yieldTokenAddress);
+    }
+
+    function setPrice(uint256 _price) external onlyOwner {
+        mintPrice = _price;
+    }
+
+    function updateWhitelist(address[] memory addresses, uint256 limit) external onlyOwner {
+        for (uint256 i = 0; i < addresses.length; i++) {
+            whitelist[addresses[i]] = limit;
+        }
+    }
+
+    function setClaimState(bool _isActive) external onlyOwner {
+        isClaimActive = _isActive;
+    }
+
+    function Claim(uint256 quantity) external callerIsUser {
+        require(isClaimActive, "Claiming is not active");
+        require(whitelist[msg.sender] > 0, "Not eligible for whitelist mint");
+        require(whitelist[msg.sender] >= quantity, "Can not mint this many");
+
+        NFTContract.Mint(msg.sender, quantity);
+        whitelist[msg.sender] -= quantity;
+    }
+
+    function Mint(uint256 quantity) external callerIsUser {
+        require(mintPrice > 0, "Minting is not active");
+
+        yieldToken.burn(msg.sender, quantity * mintPrice);
+        NFTContract.Mint(msg.sender, quantity);
+    }
+
+    function Airdrop(address[] memory accounts, uint256 quantity) external onlyOwner {
+        for (uint256 i; i < accounts.length; i++) {
+            NFTContract.Mint(accounts[i], quantity);
+        }
+    }
+
+    function setNFTContract(address _NFTContract) external onlyOwner {
+        NFTContract = INFTContract(_NFTContract);
+    }
+
+    function totalSupply() public view returns (uint256) {
+        return NFTContract.totalSupply();
+    }
+
+}
