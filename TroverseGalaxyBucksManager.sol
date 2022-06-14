@@ -39,7 +39,7 @@ contract TroverseGalaxyBucksManager is Ownable, ReentrancyGuard {
         yieldToken = IYieldToken(_yieldToken);
     }
     
-    function airdrop(address[] memory _accounts, uint256[] memory _amounts) external onlyOwner {
+    function airdrop(address[] calldata _accounts, uint256[] calldata _amounts) external onlyOwner {
         for (uint256 i; i < _accounts.length; i++) {
             yieldToken.mint(_accounts[i], _amounts[i]);
         }

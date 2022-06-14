@@ -151,14 +151,14 @@ contract TroverseStars is ERC721Enumerable, Ownable {
     /**
     * Returns the name of the star at index
     */
-    function starNameByIndex(uint256 index) public view returns (string memory) {
+    function starNameByIndex(uint256 index) external view returns (string memory) {
         return _starName[index];
     }
 
     /**
     * Returns the description of the star at index
     */
-    function starDescriptionByIndex(uint256 index) public view returns (string memory) {
+    function starDescriptionByIndex(uint256 index) external view returns (string memory) {
         return _starDescription[index];
     }
 

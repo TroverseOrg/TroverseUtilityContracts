@@ -40,7 +40,7 @@ contract TroversePassesStaking is ERC1155Holder, Ownable, ReentrancyGuard {
         return amountStaked[id][account];
     }
 
-    function stake(uint256[] calldata _tokenIds, uint256[] memory _amounts) external nonReentrant {
+    function stake(uint256[] calldata _tokenIds, uint256[] calldata _amounts) external nonReentrant {
         uint256 tokensLen = _tokenIds.length;
 
         for (uint256 i; i < tokensLen; ++i) {
@@ -53,7 +53,7 @@ contract TroversePassesStaking is ERC1155Holder, Ownable, ReentrancyGuard {
         }
     }
 
-    function stakeFor(uint256[] calldata _tokenIds, uint256[] memory _amounts, address[] memory _accounts) external onlyOwner {
+    function stakeFor(uint256[] calldata _tokenIds, uint256[] calldata _amounts, address[] calldata _accounts) external onlyOwner {
         uint256 tokensLen = _tokenIds.length;
 
         for (uint256 i; i < tokensLen; ++i) {
@@ -66,7 +66,7 @@ contract TroversePassesStaking is ERC1155Holder, Ownable, ReentrancyGuard {
         }
     }
 
-    function unstake(uint256[] calldata _tokenIds, uint256[] memory _amounts) external nonReentrant {
+    function unstake(uint256[] calldata _tokenIds, uint256[] calldata _amounts) external nonReentrant {
         uint256 tokensLen = _tokenIds.length;
 
         for (uint256 i; i < tokensLen; ++i) {
@@ -79,7 +79,7 @@ contract TroversePassesStaking is ERC1155Holder, Ownable, ReentrancyGuard {
         }
     }
 
-    function unstakeFor(uint256[] calldata _tokenIds, uint256[] memory _amounts, address[] memory _accounts) external onlyOwner {
+    function unstakeFor(uint256[] calldata _tokenIds, uint256[] calldata _amounts, address[] calldata _accounts) external onlyOwner {
         uint256 tokensLen = _tokenIds.length;
 
         for (uint256 i; i < tokensLen; ++i) {

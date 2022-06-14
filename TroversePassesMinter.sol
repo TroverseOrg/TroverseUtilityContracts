@@ -71,14 +71,14 @@ contract TroversePassesMinter is Ownable {
     }
 
     function setNFTInfos(
-        uint256[] memory ids,
-        bool[] memory mintsAllowed,
-        bool[] memory mintsByTokenAllowed,
-        bool[] memory whitelistsAllowed,
-        bool[] memory whitelistsByTokenAllowed,
-        uint128[] memory mintPrices,
-        uint128[] memory whitelistPrices,
-        uint256[] memory maxSupply
+        uint256[] calldata ids,
+        bool[] calldata mintsAllowed,
+        bool[] calldata mintsByTokenAllowed,
+        bool[] calldata whitelistsAllowed,
+        bool[] calldata whitelistsByTokenAllowed,
+        uint128[] calldata mintPrices,
+        uint128[] calldata whitelistPrices,
+        uint256[] calldata maxSupply
     ) external onlyOwner {
         for (uint256 i; i < ids.length; i++) {
             NFTInfo[ids[i]] = NFT(mintsAllowed[i], mintsByTokenAllowed[i], whitelistsAllowed[i], whitelistsByTokenAllowed[i], mintPrices[i], whitelistPrices[i], maxSupply[i]);
@@ -98,13 +98,13 @@ contract TroversePassesMinter is Ownable {
         NFTInfo[id] = NFT(mintsAllowed, mintsByTokenAllowed, whitelistsAllowed, whitelistsByTokenAllowed, mintPrice, whitelistPrice, maxSupply);
     }
 
-    function updateWhitelist(uint256 id, address[] memory addresses, uint256 limit) external onlyOwner {
+    function updateWhitelist(uint256 id, address[] calldata addresses, uint256 limit) external onlyOwner {
         for (uint256 i; i < addresses.length; i++) {
             whitelist[id][addresses[i]] = limit;
         }
     }
 
-    function Airdrop(uint256 id, uint256 amount, address[] memory accounts) external onlyOwner {
+    function Airdrop(uint256 id, uint256 amount, address[] calldata accounts) external onlyOwner {
         NFT storage nft = NFTInfo[id];
         require(nft.maxSupply > 0 , "Token doesn't exist");
         require(multiToken.totalSupply(id) + (amount * accounts.length) <= nft.maxSupply, "Token max supply reached");

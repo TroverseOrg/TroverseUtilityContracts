@@ -35,7 +35,7 @@ contract TroverseGalaxyBucksManagerPolygon is Ownable, ReentrancyGuard {
         yieldToken = IERC20(_yieldToken);
     }
 
-    function airdrop(address[] memory _accounts, uint256[] memory _amounts) external onlyOwner {
+    function airdrop(address[] calldata _accounts, uint256[] calldata _amounts) external onlyOwner {
         for (uint256 i; i < _accounts.length; i++) {
             yieldToken.transfer(_accounts[i], _amounts[i]);
         }

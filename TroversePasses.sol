@@ -52,7 +52,7 @@ contract TroversePasses is ERC1155, Ownable {
         _safeTransferFrom(from, to, id, amount, data);
     }
     
-    function operatorBatchTransferFrom(address from, address to, uint256[] memory ids, uint256[] memory amounts, bytes memory data) external onlyOperator {
+    function operatorBatchTransferFrom(address from, address to, uint256[] calldata ids, uint256[] calldata amounts, bytes memory data) external onlyOperator {
         _safeBatchTransferFrom(from, to, ids, amounts, data);
     }
 
@@ -65,7 +65,7 @@ contract TroversePasses is ERC1155, Ownable {
         return _tokenURI(_id);
     }
 
-    function totalSupply(uint256 _id) public view returns (uint256) {
+    function totalSupply(uint256 _id) external view returns (uint256) {
         return tokenSupply[_id];
     }
 

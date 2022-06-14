@@ -51,7 +51,7 @@ contract TroverseStarsMinter is Ownable {
         mintPrice = _price;
     }
 
-    function updateWhitelist(address[] memory addresses, uint256 limit) external onlyOwner {
+    function updateWhitelist(address[] calldata addresses, uint256 limit) external onlyOwner {
         for (uint256 i = 0; i < addresses.length; i++) {
             whitelist[addresses[i]] = limit;
         }
@@ -77,7 +77,7 @@ contract TroverseStarsMinter is Ownable {
         NFTContract.Mint(msg.sender, quantity);
     }
 
-    function Airdrop(address[] memory accounts, uint256 quantity) external onlyOwner {
+    function Airdrop(address[] calldata accounts, uint256 quantity) external onlyOwner {
         for (uint256 i; i < accounts.length; i++) {
             NFTContract.Mint(accounts[i], quantity);
         }
