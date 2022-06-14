@@ -32,6 +32,7 @@ contract TroverseGalaxyBucksManagerPolygon is Ownable, ReentrancyGuard {
 
 
     function setYieldToken(address _yieldToken) external onlyOwner {
+        require(_yieldToken != address(0), "Bad YieldToken address");
         yieldToken = IERC20(_yieldToken);
     }
 
@@ -57,6 +58,7 @@ contract TroverseGalaxyBucksManagerPolygon is Ownable, ReentrancyGuard {
     }
 
     function setSigner(address _signer) external onlyOwner {
+        require(_signer != address(0), "Bad Signer address");
         signer = _signer;
     }
 

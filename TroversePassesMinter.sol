@@ -54,10 +54,13 @@ contract TroversePassesMinter is Ownable {
     }
 
     function setMultiToken(address _multiToken) external onlyOwner {
+        require(_multiToken != address(0), "Bad MultiToken address");
         multiToken = IMultiToken(_multiToken);
     }
 
     function setYieldToken(address _yieldToken, bool _burnYieldToken) external onlyOwner {
+        require(_yieldToken != address(0), "Bad YieldToken address");
+
         yieldToken = IYieldToken(_yieldToken);
         burnYieldToken = _burnYieldToken;
     }

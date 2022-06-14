@@ -49,6 +49,7 @@ contract TroverseStars is ERC721Enumerable, Ownable {
     }
 
     function updateMinter(address _minter) external onlyOwner {
+        require(_minter != address(0), "Bad Minter address");
         minter = _minter;
     }
 
@@ -71,8 +72,9 @@ contract TroverseStars is ERC721Enumerable, Ownable {
         _baseTokenURI = baseURI;
     }
 
-    function setYieldToken(address yieldTokenAddress) external onlyOwner {
-        yieldToken = IYieldToken(yieldTokenAddress);
+    function setYieldToken(address _yieldToken) external onlyOwner {
+        require(_yieldToken != address(0), "Bad YieldToken address");
+        yieldToken = IYieldToken(_yieldToken);
     }
 
     function updateNameChangePrice(uint256 price) external onlyOwner {

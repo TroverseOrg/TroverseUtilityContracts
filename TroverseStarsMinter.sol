@@ -43,8 +43,9 @@ contract TroverseStarsMinter is Ownable {
         _;
     }
 
-    function setYieldToken(address yieldTokenAddress) external onlyOwner {
-        yieldToken = IYieldToken(yieldTokenAddress);
+    function setYieldToken(address _yieldToken) external onlyOwner {
+        require(_yieldToken != address(0), "Bad YieldToken address");
+        yieldToken = IYieldToken(_yieldToken);
     }
 
     function setPrice(uint256 _price) external onlyOwner {
@@ -84,6 +85,7 @@ contract TroverseStarsMinter is Ownable {
     }
 
     function setNFTContract(address _NFTContract) external onlyOwner {
+        require(_NFTContract != address(0), "Bad NFTContract address");
         NFTContract = INFTContract(_NFTContract);
     }
 

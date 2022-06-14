@@ -24,16 +24,9 @@ contract TroversePasses is ERC1155, Ownable {
     mapping(uint256 => string) private _tokenURIs;
     mapping(uint256 => uint256) public tokenSupply;
 
-    address public minter;
-
     
     constructor() ERC1155("") { }
 
-    
-    modifier onlyMinter() {
-        require(msg.sender == minter, "The caller is not the minter");
-        _;
-    }
 
     modifier onlyOperator() {
         require(operators[_msgSender()], "The caller is not an operator");
@@ -41,11 +34,8 @@ contract TroversePasses is ERC1155, Ownable {
     }
     
     function updateOperatorState(address _operator, bool _state) external onlyOwner {
+        require(_operator != address(0), "Bad Operator address");
         operators[_operator] = _state;
-    }
-    
-    function updateMinter(address _minter) external onlyOwner {
-        minter = _minter;
     }
     
     function operatorTransferFrom(address from, address to, uint256 id, uint256 amount, bytes memory data) external onlyOperator {
@@ -56,7 +46,7 @@ contract TroversePasses is ERC1155, Ownable {
         _safeBatchTransferFrom(from, to, ids, amounts, data);
     }
 
-    function mint(address account, uint256 id, uint256 amount, bytes memory data) external onlyMinter {
+    function mint(address account, uint256 id, uint256 amount, bytes memory data) external onlyOperator {
         _mint(account, id, amount, data);
         tokenSupply[id] += amount;
     }

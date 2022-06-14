@@ -33,6 +33,7 @@ contract TroversePassesStaking is ERC1155Holder, Ownable, ReentrancyGuard {
 
 
     function setMultiToken(address _multiToken) external onlyOwner {
+        require(_multiToken != address(0), "Bad MultiToken address");
         multiToken = IMultiToken(_multiToken);
     }
 

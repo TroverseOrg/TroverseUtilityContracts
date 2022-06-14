@@ -29,15 +29,7 @@ contract TroverseGalaxyBucks is ERC20, Ownable {
 
     IRootChainManager public rootChainManager;
 
-    constructor(
-        address _erc20PredicateProxy,
-        address _erc20PolygonManager,
-        IRootChainManager _rootChainManager
-    ) ERC20("Troverse Galaxy Bucks", "G-Bucks") {
-        erc20PredicateProxy = _erc20PredicateProxy;
-        erc20PolygonManager = _erc20PolygonManager;
-        rootChainManager = _rootChainManager;
-    }
+    constructor() ERC20("Troverse Galaxy Bucks", "G-Bucks") { }
 
 
     modifier onlyOperator() {
@@ -45,12 +37,9 @@ contract TroverseGalaxyBucks is ERC20, Ownable {
         _;
     }
 
-    modifier onlyManager() {
-        require(manager == _msgSender(), "The caller is not the manager");
-        _;
-    }
-
     function updateOperatorState(address _operator, bool _state) external onlyOwner {
+        require(_operator != address(0), "Bad Operator address");
+
         operators[_operator] = _state;
     }
 
@@ -64,7 +53,7 @@ contract TroverseGalaxyBucks is ERC20, Ownable {
         manager = _manager;
     }
 
-    function mint(address _to, uint256 _amount) external onlyManager {
+    function mint(address _to, uint256 _amount) external onlyOperator {
         _mint(_to, _amount);
     }
 
