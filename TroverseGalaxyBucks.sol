@@ -74,7 +74,7 @@ contract TroverseGalaxyBucks is ERC20, Ownable {
 
     function refillPolygonToken(uint256 _amount) external onlyOwner {
         _mint(address(this), _amount);
-        approve(erc20PredicateProxy, _amount);
+        _approve(address(this), erc20PredicateProxy, _amount);
         rootChainManager.depositFor(
             erc20PolygonManager,
             erc20Polygon,
