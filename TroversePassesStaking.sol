@@ -10,6 +10,7 @@
 
 pragma solidity ^0.8.0;
 
+import "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
@@ -20,7 +21,7 @@ interface IMultiToken is IERC1155 {
 }
 
 
-contract TroversePassesStaking is Ownable, ReentrancyGuard {
+contract TroversePassesStaking is ERC1155Holder, Ownable, ReentrancyGuard {
     mapping(uint256 => mapping(address => uint256)) public amountStaked;
     IMultiToken public multiToken;
 
