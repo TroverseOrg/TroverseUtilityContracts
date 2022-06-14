@@ -36,7 +36,7 @@ contract TroverseStars is ERC721Enumerable, Ownable {
     uint256 public descriptionChangePrice = 100 ether;
 
     event NameChanged(uint256 starId, string starName);
-    event NameCleared(uint256 starId);
+    event NameCleared(uint256 starId, bool permanent);
     event DescriptionChanged(uint256 starId, string starDescription);
     event DescriptionCleared(uint256 starId);
 
@@ -109,9 +109,13 @@ contract TroverseStars is ERC721Enumerable, Ownable {
     /**
     * @notice Clears the name of a star, in case an inappropriate name has set
     */
-    function clearName(uint256 starId) external onlyOwner {
+    function clearName(uint256 starId, bool permanent) external onlyOwner {
+        if (!permanent) {
+            toggleReserveName(_starName[starId], false);
+        }
+
         delete _starName[starId];
-        emit NameCleared(starId);
+        emit NameCleared(starId, permanent);
     }
 
     /**
