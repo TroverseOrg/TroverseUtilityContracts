@@ -24,7 +24,7 @@ contract TroverseGalaxyBucksManager is Ownable, ReentrancyGuard {
     using ECDSA for bytes32;
 
     bool public claimEnabled = false;
-    mapping(address => uint8) private claimCount;
+    mapping(address => uint64) public claimCount;
     mapping(bytes => bool) private usedClaimSignatures;
     
     address private signer;
@@ -42,7 +42,6 @@ contract TroverseGalaxyBucksManager is Ownable, ReentrancyGuard {
     function airdrop(address[] memory _accounts, uint256[] memory _amounts) external onlyOwner {
         for (uint256 i; i < _accounts.length; i++) {
             yieldToken.mint(_accounts[i], _amounts[i]);
-            claimCount[_accounts[i]]++;
         }
     }
     
