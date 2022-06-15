@@ -81,14 +81,14 @@ contract TroversePassesMinter is Ownable {
     }
 
     function setNFTInfos(
-        uint256[] calldata ids,
-        bool[] calldata mintsAllowed,
-        bool[] calldata mintsByTokenAllowed,
-        bool[] calldata whitelistsAllowed,
-        bool[] calldata whitelistsByTokenAllowed,
-        uint128[] calldata mintPrices,
-        uint128[] calldata whitelistPrices,
-        uint256[] calldata maxSupply
+        uint256[] memory ids,
+        bool[] memory mintsAllowed,
+        bool[] memory mintsByTokenAllowed,
+        bool[] memory whitelistsAllowed,
+        bool[] memory whitelistsByTokenAllowed,
+        uint128[] memory mintPrices,
+        uint128[] memory whitelistPrices,
+        uint256[] memory maxSupply
     ) external onlyOwner {
         for (uint256 i; i < ids.length; i++) {
             NFTInfo[ids[i]] = NFT(mintsAllowed[i], mintsByTokenAllowed[i], whitelistsAllowed[i], whitelistsByTokenAllowed[i], mintPrices[i], whitelistPrices[i], maxSupply[i]);
