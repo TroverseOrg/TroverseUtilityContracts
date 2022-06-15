@@ -55,11 +55,11 @@ contract TroverseGalaxyBucksPolygon is ERC20, Ownable {
         emit ManagerChanged(_manager);
     }
 
-    function mint(address _to, uint256 _amount) external onlyOperator {
+    function mintByTransfer(address _to, uint256 _amount) external onlyOperator {
         _transfer(manager, _to, _amount);
     }
 
-    function burn(address _from, uint256 _amount) external onlyOperator {
+    function burnByTransfer(address _from, uint256 _amount) external onlyOperator {
         _transfer(_from, manager, _amount);
     }
 
