@@ -21,6 +21,8 @@ contract TroverseStarsStaking is ERC721Holder, Ownable, ReentrancyGuard {
 
     IERC721 public nftCollection;
 
+    event NFTCollectionChanged(address _nftCollection);
+
     event Staked(uint256 id, address account);
     event Unstaked(uint256 id, address account);
 
@@ -31,6 +33,8 @@ contract TroverseStarsStaking is ERC721Holder, Ownable, ReentrancyGuard {
     function setNFTCollection(address _nftCollection) external onlyOwner {
         require(_nftCollection != address(0), "Bad NFTCollection address");
         nftCollection = IERC721(_nftCollection);
+
+        emit NFTCollectionChanged(_nftCollection);
     }
 
     function balanceOf(address owner) external view returns (uint256) {

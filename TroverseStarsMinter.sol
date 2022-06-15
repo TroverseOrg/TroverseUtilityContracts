@@ -34,6 +34,11 @@ contract TroverseStarsMinter is Ownable {
     bool public isClaimActive;
 
     IYieldToken public yieldToken;
+    
+    event YieldTokenChanged(address _yieldToken);
+    event PriceChanged(uint256 _price);
+    event ClaimStateChanged(bool _isActive);
+    event NFTContractChanged(address _NFTContract);
 
 
     constructor() { }
@@ -46,10 +51,14 @@ contract TroverseStarsMinter is Ownable {
     function setYieldToken(address _yieldToken) external onlyOwner {
         require(_yieldToken != address(0), "Bad YieldToken address");
         yieldToken = IYieldToken(_yieldToken);
+    
+        emit YieldTokenChanged(_yieldToken);
     }
 
     function setPrice(uint256 _price) external onlyOwner {
         mintPrice = _price;
+
+        emit PriceChanged(_price);
     }
 
     function updateWhitelist(address[] calldata addresses, uint256 limit) external onlyOwner {
@@ -60,6 +69,8 @@ contract TroverseStarsMinter is Ownable {
 
     function setClaimState(bool _isActive) external onlyOwner {
         isClaimActive = _isActive;
+
+        emit ClaimStateChanged(_isActive);
     }
 
     function Claim(uint256 quantity) external callerIsUser {
@@ -87,6 +98,8 @@ contract TroverseStarsMinter is Ownable {
     function setNFTContract(address _NFTContract) external onlyOwner {
         require(_NFTContract != address(0), "Bad NFTContract address");
         NFTContract = INFTContract(_NFTContract);
+
+        emit NFTContractChanged(_NFTContract);
     }
 
     function totalSupply() public view returns (uint256) {

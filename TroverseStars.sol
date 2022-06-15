@@ -35,13 +35,20 @@ contract TroverseStars is ERC721Enumerable, Ownable {
     uint256 public nameChangePrice = 100 ether;
     uint256 public descriptionChangePrice = 100 ether;
 
+    event YieldTokenChanged(address _yieldToken);
+    event UpdatedMinter(address _minter);
+
     event NameChanged(uint256 starId, string starName);
     event NameCleared(uint256 starId, bool permanent);
     event DescriptionChanged(uint256 starId, string starDescription);
     event DescriptionCleared(uint256 starId);
 
+    event UpdatedNameChangePrice(uint256 price);
+    event UpdatedDescriptionChangePrice(uint256 price);
+
 
     constructor() ERC721("Troverse Stars", "STAR") { }
+
     
     modifier onlyMinter() {
         require(msg.sender == minter, "The caller is not the minter");
@@ -51,6 +58,8 @@ contract TroverseStars is ERC721Enumerable, Ownable {
     function updateMinter(address _minter) external onlyOwner {
         require(_minter != address(0), "Bad Minter address");
         minter = _minter;
+
+        emit UpdatedMinter(_minter);
     }
 
     function Mint(address to, uint256 quantity) external onlyMinter {
@@ -75,14 +84,20 @@ contract TroverseStars is ERC721Enumerable, Ownable {
     function setYieldToken(address _yieldToken) external onlyOwner {
         require(_yieldToken != address(0), "Bad YieldToken address");
         yieldToken = IYieldToken(_yieldToken);
+
+        emit YieldTokenChanged(_yieldToken);
     }
 
     function updateNameChangePrice(uint256 price) external onlyOwner {
         nameChangePrice = price;
+
+        emit UpdatedNameChangePrice(price);
     }
 
     function updateDescriptionChangePrice(uint256 price) external onlyOwner {
         descriptionChangePrice = price;
+
+        emit UpdatedDescriptionChangePrice(price);
     }
 
     /**

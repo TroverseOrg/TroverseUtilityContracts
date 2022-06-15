@@ -21,6 +21,10 @@ contract TroverseGalaxyBucksPolygon is ERC20, Ownable {
     // keeping it for checking, whether deposit being called by valid address or not
     address public childChainManagerProxy;
 
+    event OperatorStateChanged(address _operator, bool _state);
+    event ManagerChanged(address _manager);
+    event UpdatedChildChainManager(address newChildChainManagerProxy);
+
 
     constructor() ERC20("Troverse Galaxy Bucks", "G-Bucks") { }
     
@@ -33,6 +37,8 @@ contract TroverseGalaxyBucksPolygon is ERC20, Ownable {
     function updateOperatorState(address _operator, bool _state) external onlyOwner {
         require(_operator != address(0), "Bad Operator address");
         operators[_operator] = _state;
+
+        emit OperatorStateChanged(_operator, _state);
     }
 
     function updateManager(address _manager) external onlyOwner {
@@ -40,9 +46,13 @@ contract TroverseGalaxyBucksPolygon is ERC20, Ownable {
 
         if (_manager != address(0)) {
             operators[_manager] = true;
+
+            emit OperatorStateChanged(_manager, true);
         }
 
         manager = _manager;
+
+        emit ManagerChanged(_manager);
     }
 
     function mint(address _to, uint256 _amount) external onlyOperator {
@@ -55,8 +65,9 @@ contract TroverseGalaxyBucksPolygon is ERC20, Ownable {
 
     function updateChildChainManager(address newChildChainManagerProxy) external onlyOwner {
         require(newChildChainManagerProxy != address(0), "Bad ChildChainManagerProxy address");
-
         childChainManagerProxy = newChildChainManagerProxy;
+
+        emit UpdatedChildChainManager(newChildChainManagerProxy);
     }
 
     function deposit(address user, bytes calldata depositData) external {

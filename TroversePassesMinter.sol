@@ -44,6 +44,9 @@ contract TroversePassesMinter is Ownable {
     IYieldToken public yieldToken;
     bool public burnYieldToken;
 
+    event MultiTokenChanged(address _multiToken);
+    event YieldTokenChanged(address _yieldToken, bool _burnYieldToken);
+
 
     constructor() { }
     
@@ -56,6 +59,8 @@ contract TroversePassesMinter is Ownable {
     function setMultiToken(address _multiToken) external onlyOwner {
         require(_multiToken != address(0), "Bad MultiToken address");
         multiToken = IMultiToken(_multiToken);
+
+        emit MultiTokenChanged(_multiToken);
     }
 
     function setYieldToken(address _yieldToken, bool _burnYieldToken) external onlyOwner {
@@ -63,6 +68,8 @@ contract TroversePassesMinter is Ownable {
 
         yieldToken = IYieldToken(_yieldToken);
         burnYieldToken = _burnYieldToken;
+
+        emit YieldTokenChanged(_yieldToken, _burnYieldToken);
     }
 
     function getMintPrice(uint256 id) external view returns (uint128) {

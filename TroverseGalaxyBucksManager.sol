@@ -31,6 +31,10 @@ contract TroverseGalaxyBucksManager is Ownable, ReentrancyGuard {
 
     IYieldToken public yieldToken;
 
+    event YieldTokenChanged(address _yieldToken);
+    event ClaimStateChanged(bool _newState);
+    event SignerChanged(address _newSigner);
+
 
     constructor() { }
 
@@ -38,6 +42,8 @@ contract TroverseGalaxyBucksManager is Ownable, ReentrancyGuard {
     function setYieldToken(address _yieldToken) external onlyOwner {
         require(_yieldToken != address(0), "Bad YieldToken address");
         yieldToken = IYieldToken(_yieldToken);
+
+        emit YieldTokenChanged(_yieldToken);
     }
     
     function airdrop(address[] calldata _accounts, uint256[] calldata _amounts) external onlyOwner {
@@ -59,11 +65,15 @@ contract TroverseGalaxyBucksManager is Ownable, ReentrancyGuard {
 
     function toggleClaim(bool _claimEnabled) external onlyOwner {
         claimEnabled = _claimEnabled;
+
+        emit ClaimStateChanged(_claimEnabled);
     }
 
     function setSigner(address _signer) external onlyOwner {
         require(_signer != address(0), "Bad Signer address");
         signer = _signer;
+
+        emit SignerChanged(_signer);
     }
 
     function verifyOwnerSignature(bytes32 hash, bytes memory signature) private view returns (bool) {

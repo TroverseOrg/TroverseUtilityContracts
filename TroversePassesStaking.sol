@@ -25,6 +25,8 @@ contract TroversePassesStaking is ERC1155Holder, Ownable, ReentrancyGuard {
     mapping(uint256 => mapping(address => uint256)) public amountStaked;
     IMultiToken public multiToken;
 
+    event MultiTokenChanged(address _multiToken);
+
     event Staked(uint256 id, uint256 amount, address account);
     event Unstaked(uint256 id, uint256 amount, address account);
 
@@ -35,6 +37,8 @@ contract TroversePassesStaking is ERC1155Holder, Ownable, ReentrancyGuard {
     function setMultiToken(address _multiToken) external onlyOwner {
         require(_multiToken != address(0), "Bad MultiToken address");
         multiToken = IMultiToken(_multiToken);
+
+        emit MultiTokenChanged(_multiToken);
     }
 
     function balanceOf(address account, uint256 id) external view returns (uint256) {

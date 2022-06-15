@@ -24,6 +24,10 @@ contract TroversePasses is ERC1155, Ownable {
     mapping(uint256 => string) private _tokenURIs;
     mapping(uint256 => uint256) public tokenSupply;
 
+    event OperatorStateChanged(address _operator, bool _state);
+    event TokenURIChanged(uint256 id, string newURI);
+    event URIPrefixChanged(string newURI);
+
     
     constructor() ERC1155("") { }
 
@@ -36,6 +40,8 @@ contract TroversePasses is ERC1155, Ownable {
     function updateOperatorState(address _operator, bool _state) external onlyOwner {
         require(_operator != address(0), "Bad Operator address");
         operators[_operator] = _state;
+
+        emit OperatorStateChanged(_operator, _state);
     }
     
     function operatorTransferFrom(address from, address to, uint256 id, uint256 amount, bytes memory data) external onlyOperator {
@@ -65,9 +71,13 @@ contract TroversePasses is ERC1155, Ownable {
 
     function setTokenURI(uint256 id, string memory newURI) external onlyOwner {
         _tokenURIs[id] = newURI;
+
+        emit TokenURIChanged(id, newURI);
     }
 
     function setURI(string memory newURI) external onlyOwner {
         _uriPrefix = newURI;
+        
+        emit URIPrefixChanged(newURI);
     }
 }
