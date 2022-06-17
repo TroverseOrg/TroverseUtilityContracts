@@ -15,7 +15,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 
 contract TroverseGalaxyBucksPolygon is ERC20, Ownable {
-    mapping(address => bool) private operators;
+    mapping(address => bool) public operators;
     address public manager;
 
     // keeping it for checking, whether deposit being called by valid address or not
