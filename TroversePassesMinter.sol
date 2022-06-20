@@ -124,16 +124,16 @@ contract TroversePassesMinter is Ownable {
         }
     }
 
-    function MintForByToken(uint256 id, uint256 amount, address account, uint256 price) external onlyOwner {
+    function MintForByToken(uint256 id, uint256 amount, address account, uint256 totalCost) external onlyOwner {
         NFT storage nft = NFTInfo[id];
         require(nft.maxSupply > 0 , "Token doesn't exist");
         require(multiToken.totalSupply(id) + amount <= nft.maxSupply, "Token max supply reached");
 
-        if (price > 0) {
+        if (totalCost > 0) {
             if (burnYieldToken) {
-                yieldToken.burn(account, price);
+                yieldToken.burn(account, totalCost);
             } else {
-                yieldToken.transferFrom(account, address(this), price);
+                yieldToken.transferFrom(account, address(this), totalCost);
             }
         }
         
