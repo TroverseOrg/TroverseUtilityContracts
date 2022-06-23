@@ -22,7 +22,7 @@ contract TroversePasses is ERC1155, Ownable {
     string private _uriPrefix;
 
     mapping(uint256 => string) private _tokenURIs;
-    mapping(uint256 => uint256) public tokenSupply;
+    mapping(uint256 => uint256) private tokenSupply;
 
     event OperatorStateChanged(address _operator, bool _state);
     event TokenURIChanged(uint256 id, string newURI);
