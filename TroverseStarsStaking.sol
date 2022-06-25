@@ -16,8 +16,11 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 contract TroverseStarsStaking is ERC721Holder, Ownable, ReentrancyGuard {
-    mapping(address => uint256) public amountStaked;
+    mapping(address => uint256) private amountStaked;
     mapping(uint256 => address) public stakerAddress;
+
+    mapping(address => mapping(uint256 => uint256)) private _ownedTokens;
+    mapping(uint256 => uint256) private _ownedTokensIndex;
 
     IERC721 public nftCollection;
 
@@ -37,8 +40,13 @@ contract TroverseStarsStaking is ERC721Holder, Ownable, ReentrancyGuard {
         emit NFTCollectionChanged(_nftCollection);
     }
 
-    function balanceOf(address owner) external view returns (uint256) {
+    function balanceOf(address owner) public view returns (uint256) {
         return amountStaked[owner];
+    }
+
+    function tokenOfOwnerByIndex(address owner, uint256 index) external view returns (uint256) {
+        require(index < balanceOf(owner), "Owner index out of bounds");
+        return _ownedTokens[owner][index];
     }
     
     function stake(uint256[] calldata _tokenIds) external nonReentrant {
@@ -49,10 +57,11 @@ contract TroverseStarsStaking is ERC721Holder, Ownable, ReentrancyGuard {
             nftCollection.transferFrom(_msgSender(), address(this), _tokenIds[i]);
             stakerAddress[_tokenIds[i]] = _msgSender();
 
+            _addTokenToOwnerEnumeration(_msgSender(), _tokenIds[i]);
+            amountStaked[_msgSender()] += 1;
+
             emit Staked(_tokenIds[i], _msgSender());
         }
-
-        amountStaked[_msgSender()] += tokensLen;
     }
 
     function unstake(uint256[] calldata _tokenIds) external nonReentrant {
@@ -65,9 +74,31 @@ contract TroverseStarsStaking is ERC721Holder, Ownable, ReentrancyGuard {
             stakerAddress[_tokenIds[i]] = address(0);
             nftCollection.transferFrom(address(this), _msgSender(), _tokenIds[i]);
 
+            _removeTokenFromOwnerEnumeration(_msgSender(), _tokenIds[i]);
+            amountStaked[_msgSender()] -= 1;
+
             emit Unstaked(_tokenIds[i], _msgSender());
         }
+    }
 
-        amountStaked[_msgSender()] -= tokensLen;
+    function _addTokenToOwnerEnumeration(address to, uint256 tokenId) private {
+        uint256 length = balanceOf(to);
+        _ownedTokens[to][length] = tokenId;
+        _ownedTokensIndex[tokenId] = length;
+    }
+
+    function _removeTokenFromOwnerEnumeration(address from, uint256 tokenId) private {
+        uint256 lastTokenIndex = balanceOf(from) - 1;
+        uint256 tokenIndex = _ownedTokensIndex[tokenId];
+        
+        if (tokenIndex != lastTokenIndex) {
+            uint256 lastTokenId = _ownedTokens[from][lastTokenIndex];
+
+            _ownedTokens[from][tokenIndex] = lastTokenId;
+            _ownedTokensIndex[lastTokenId] = tokenIndex;
+        }
+        
+        delete _ownedTokensIndex[tokenId];
+        delete _ownedTokens[from][lastTokenIndex];
     }
 }
